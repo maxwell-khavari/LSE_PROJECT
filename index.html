@@ -1,187 +1,717 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Community Contribution Intervention</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
+<title>Community Contribution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
 <style>
-  body {
-    font-family: system-ui;
-    background: linear-gradient(to bottom, #f8fafc, #eef2f7);
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --ink:#0f0e0d;
+  --ink2:#5a5751;
+  --ink3:#9e9a94;
+  --paper:#faf9f6;
+  --surface:#f2f0eb;
+  --line:#e4e1da;
+  --accent:#c8a96e;
+  --accent-dark:#a07c3a;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+  --r:14px;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.screen{display:none;min-height:100vh;animation:fadeUp .45s ease both}
+.screen.active{display:flex;flex-direction:column}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* NAV */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 40px;border-bottom:1px solid var(--line);
+  background:var(--paper);position:sticky;top:0;z-index:10;
+}
+.nav-logo{font-family:var(--serif);font-size:18px;letter-spacing:-.02em}
+.nav-steps{display:flex;gap:6px;align-items:center}
+.step-pip{
+  width:28px;height:4px;border-radius:2px;
+  background:var(--line);transition:background .3s;
+}
+.step-pip.done{background:var(--ink)}
+.step-pip.active{background:var(--accent)}
+
+/* LANDING */
+#landing{
+  align-items:center;justify-content:center;
+  padding:60px 40px;text-align:center;position:relative;overflow:hidden;
+}
+.landing-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 800px 600px at 50% 60%,#f0ebe080 0%,transparent 70%);
+}
+.landing-eyebrow{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-dark);margin-bottom:20px;font-weight:500;
+}
+.landing-title{
+  font-family:var(--serif);font-size:clamp(42px,7vw,72px);
+  line-height:1.05;letter-spacing:-.03em;
+  color:var(--ink);margin-bottom:12px;
+}
+.landing-title em{font-style:italic;color:var(--accent-dark)}
+.landing-sub{
+  font-size:16px;color:var(--ink2);line-height:1.7;
+  max-width:460px;margin:0 auto 48px;
+}
+.sessions-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;max-width:640px;width:100%;margin:0 auto 48px;
+}
+.session-card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:20px;text-align:left;
+  position:relative;overflow:hidden;
+}
+.session-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--line);
+}
+.session-card.s1::before{background:var(--accent)}
+.session-num{
+  font-family:var(--serif);font-size:32px;color:var(--line);
+  line-height:1;margin-bottom:10px;
+}
+.session-card.s1 .session-num{color:var(--accent)}
+.session-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.session-desc{font-size:12px;color:var(--ink3);line-height:1.5}
+.btn-main{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--ink);color:var(--paper);
+  padding:14px 32px;border-radius:100px;
+  font-family:var(--sans);font-size:14px;font-weight:500;
+  border:none;cursor:pointer;transition:opacity .2s,transform .15s;
+  letter-spacing:.01em;
+}
+.btn-main:hover{opacity:.85;transform:translateY(-1px)}
+.btn-main:active{transform:scale(.98)}
+.btn-main i{font-size:16px}
+
+/* SESSION PAGES */
+.session-wrap{
+  flex:1;padding:48px 40px;max-width:700px;width:100%;
+  margin:0 auto;
+}
+.session-header{margin-bottom:40px}
+.session-eyebrow{
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-dark);margin-bottom:12px;font-weight:500;
+}
+.session-title-lg{
+  font-family:var(--serif);font-size:clamp(28px,4vw,42px);
+  line-height:1.1;letter-spacing:-.025em;margin-bottom:10px;
+}
+.session-title-lg em{font-style:italic}
+.session-desc-sm{font-size:14px;color:var(--ink2);line-height:1.6}
+
+.q-block{margin-bottom:28px}
+.q-label{
+  font-size:13px;color:var(--ink2);margin-bottom:8px;
+  display:flex;align-items:baseline;gap:8px;line-height:1.5;
+}
+.q-num{
+  font-family:var(--serif);font-size:20px;color:var(--line);
+  flex-shrink:0;line-height:1;
+}
+textarea{
+  width:100%;border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;font-family:var(--sans);font-size:14px;
+  color:var(--ink);background:var(--paper);resize:vertical;
+  min-height:80px;line-height:1.6;transition:border-color .2s;
+  outline:none;
+}
+textarea:focus{border-color:var(--accent)}
+textarea::placeholder{color:var(--ink3)}
+
+.section-divider{
+  display:flex;align-items:center;gap:16px;margin:36px 0 28px;
+}
+.section-divider-line{flex:1;height:1px;background:var(--line)}
+.section-divider-label{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink3);font-weight:500;white-space:nowrap;
+}
+
+.btn-continue{
+  width:100%;background:var(--ink);color:var(--paper);
+  padding:15px;border-radius:100px;font-family:var(--sans);
+  font-size:14px;font-weight:500;border:none;cursor:pointer;
+  transition:opacity .2s,transform .15s;margin-top:12px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-continue:hover{opacity:.85;transform:translateY(-1px)}
+.btn-continue:active{transform:scale(.98)}
+.btn-continue i{font-size:16px}
+
+/* MAP */
+#map-screen .session-wrap{max-width:none;padding:32px 40px}
+.map-layout{display:grid;grid-template-columns:300px 1fr;gap:24px;flex:1}
+.map-sidebar{display:flex;flex-direction:column;gap:16px}
+.map-sidebar-header{margin-bottom:4px}
+.map-input-wrap{display:flex;flex-direction:column;gap:8px}
+.map-input{
+  width:100%;border:1px solid var(--line);border-radius:var(--r);
+  padding:12px 14px;font-family:var(--sans);font-size:13px;
+  color:var(--ink);background:var(--paper);outline:none;
+  transition:border-color .2s;
+}
+.map-input:focus{border-color:var(--accent)}
+.map-input::placeholder{color:var(--ink3)}
+.map-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.map-type-btn{
+  padding:8px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);font-family:var(--sans);font-size:12px;
+  color:var(--ink2);cursor:pointer;transition:all .15s;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.map-type-btn i{font-size:18px;color:var(--ink3)}
+.map-type-btn:hover,.map-type-btn.selected{
+  background:var(--surface);border-color:var(--ink);color:var(--ink);
+}
+.map-type-btn.selected i{color:var(--ink)}
+.btn-add{
+  width:100%;background:var(--ink);color:var(--paper);
+  padding:11px;border-radius:100px;font-family:var(--sans);
+  font-size:13px;font-weight:500;border:none;cursor:pointer;
+  transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-add:hover{opacity:.8}
+.btn-add i{font-size:15px}
+
+.map-nodes-list{
+  flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;
+}
+.map-node-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;
+  background:var(--surface);border-radius:10px;border:1px solid var(--line);
+  font-size:12px;
+}
+.node-type-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.node-item-text{flex:1;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node-remove{
+  background:none;border:none;cursor:pointer;color:var(--ink3);
+  padding:2px;display:flex;align-items:center;transition:color .15s;
+  flex-shrink:0;
+}
+.node-remove:hover{color:var(--ink)}
+.node-remove i{font-size:14px}
+
+.map-canvas-wrap{
+  position:relative;background:var(--surface);
+  border:1px solid var(--line);border-radius:18px;overflow:hidden;
+  min-height:500px;
+}
+#map-svg{position:absolute;inset:0;width:100%;height:100%}
+.map-node-el{
+  position:absolute;cursor:move;user-select:none;
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:100px;
+  background:var(--paper);border:1px solid var(--line);
+  font-family:var(--sans);font-size:12px;color:var(--ink);
+  transform:translate(-50%,-50%);
+  transition:border-color .15s;white-space:nowrap;
+}
+.map-node-el:hover{border-color:var(--accent)}
+.map-node-el.dragging{opacity:.85;z-index:10}
+.map-node-el .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.map-legend{
+  position:absolute;bottom:16px;left:16px;
+  display:flex;gap:12px;flex-wrap:wrap;
+}
+.legend-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;color:var(--ink3);
+}
+.legend-dot{width:7px;height:7px;border-radius:50%}
+
+/* DONE */
+#done-screen{align-items:center;justify-content:center;text-align:center;padding:60px 40px}
+.done-icon{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;font-size:28px;color:var(--ink);
+}
+.done-title{font-family:var(--serif);font-size:42px;margin-bottom:12px;letter-spacing:-.03em}
+.done-sub{font-size:15px;color:var(--ink2);line-height:1.7;max-width:360px;margin:0 auto 36px}
+.done-restart{
+  background:none;border:1px solid var(--line);
+  padding:11px 28px;border-radius:100px;font-family:var(--sans);
+  font-size:13px;color:var(--ink2);cursor:pointer;transition:all .15s;
+}
+.done-restart:hover{border-color:var(--ink);color:var(--ink)}
+
+@media(max-width:640px){
+  .sessions-grid{grid-template-columns:1fr}
+  .nav{padding:16px 20px}
+  .session-wrap{padding:32px 20px}
+  .map-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  #map-screen .session-wrap{padding:20px}
+  .map-canvas-wrap{min-height:360px}
+}
 </style>
 </head>
+<body>
 
-<body class="text-slate-800">
-
-<!-- ================= LANDING ================= -->
-<section id="landing" class="min-h-screen flex flex-col items-center justify-center text-center p-6">
-  <h1 class="text-4xl font-semibold">Community Contribution</h1>
-  <p class="mt-4 max-w-xl text-slate-600">
-    A guided reflection process exploring community, meaning, and career direction through contribution.
-  </p>
-
-  <button onclick="go('session1')" class="mt-8 px-6 py-3 bg-black text-white rounded-xl">
-    Begin Session 1
-  </button>
-</section>
-
-<!-- ================= SESSION 1 ================= -->
-<section id="session1" class="hidden p-6 max-w-3xl mx-auto space-y-6">
-  <h2 class="text-2xl font-semibold">Session 1 — Initial Intake</h2>
-
-  <p class="text-sm text-slate-600">
-    Clarify goals, expectations, and purpose of the intervention.
-  </p>
-
-  <div class="space-y-4">
-    <textarea class="input" placeholder="What would you like to be different?"></textarea>
-    <textarea class="input" placeholder="What obstacles are there? / What will help you overcome those?"></textarea>
-    <textarea class="input" placeholder="What stands out to you? Why?"></textarea>
-    <textarea class="input" placeholder="What are your best hopes for our time together?"></textarea>
-    <textarea class="input" placeholder="What goals would you like to achieve?"></textarea>
-    <textarea class="input" placeholder="What will you do yourself as part of the process?"></textarea>
-    <textarea class="input" placeholder="What do you predict will happen over the next few weeks?"></textarea>
+<!-- LANDING -->
+<div id="landing" class="screen active">
+  <nav class="nav">
+    <span class="nav-logo">Community</span>
+    <div class="nav-steps" id="nav-steps-landing">
+      <div class="step-pip active"></div>
+      <div class="step-pip"></div>
+      <div class="step-pip"></div>
+      <div class="step-pip"></div>
+    </div>
+  </nav>
+  <div class="landing-bg"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:40px 20px">
+    <p class="landing-eyebrow">Guided reflection</p>
+    <h1 class="landing-title">Find your<br><em>contribution</em></h1>
+    <p class="landing-sub">A three-session process exploring community, meaning, and career direction through the lens of what you give.</p>
+    <div class="sessions-grid">
+      <div class="session-card s1">
+        <div class="session-num">01</div>
+        <div class="session-title">Initial intake</div>
+        <div class="session-desc">Goals, expectations, purpose</div>
+      </div>
+      <div class="session-card">
+        <div class="session-num">02</div>
+        <div class="session-title">Community</div>
+        <div class="session-desc">Belonging, connection, identity</div>
+      </div>
+      <div class="session-card">
+        <div class="session-num">03</div>
+        <div class="session-title">Altruistic capital</div>
+        <div class="session-desc">Three good things &amp; ikigai</div>
+      </div>
+    </div>
+    <button class="btn-main" onclick="go('session1')">
+      Begin session 1
+      <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </button>
   </div>
+</div>
 
-  <button onclick="go('session2')" class="btn">Continue</button>
-</section>
-
-<!-- ================= SESSION 2 ================= -->
-<section id="session2" class="hidden p-6 max-w-3xl mx-auto space-y-6">
-  <h2 class="text-2xl font-semibold">Session 2 — Community Exploration</h2>
-
-  <p class="text-sm text-slate-600">
-    Community is belonging, opportunity, and hidden connection.
-  </p>
-
-  <div class="space-y-4">
-    <textarea class="input" placeholder="What are a few words that come to mind when you hear 'community'?"></textarea>
-    <textarea class="input" placeholder="What does community mean to you?"></textarea>
-    <textarea class="input" placeholder="What makes an ideal community?"></textarea>
-    <textarea class="input" placeholder="What groups have impacted your life most?"></textarea>
-    <textarea class="input" placeholder="Where do you feel most like yourself?"></textarea>
-    <textarea class="input" placeholder="Who do you see most often? Has this changed?"></textarea>
-    <textarea class="input" placeholder="If everything changed tomorrow, who would still be around?"></textarea>
+<!-- SESSION 1 -->
+<div id="session1" class="screen">
+  <nav class="nav">
+    <span class="nav-logo">Community</span>
+    <div class="nav-steps">
+      <div class="step-pip active"></div>
+      <div class="step-pip"></div>
+      <div class="step-pip"></div>
+      <div class="step-pip"></div>
+    </div>
+  </nav>
+  <div class="session-wrap">
+    <div class="session-header">
+      <p class="session-eyebrow">Session 01</p>
+      <h2 class="session-title-lg">Initial <em>intake</em></h2>
+      <p class="session-desc-sm">Clarify your goals, expectations, and purpose for this process.</p>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">1</span>What would you like to be different?</div>
+      <textarea placeholder="Describe the change you're hoping for…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">2</span>What obstacles exist, and what will help you overcome them?</div>
+      <textarea placeholder="Be honest about what's in the way…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">3</span>What stands out to you right now, and why?</div>
+      <textarea placeholder="What's on your mind as you begin?"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">4</span>What are your best hopes for our time together?</div>
+      <textarea placeholder="Dream a little…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">5</span>What goals would you like to achieve?</div>
+      <textarea placeholder="Concrete or abstract, list them…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">6</span>What will you contribute yourself as part of this process?</div>
+      <textarea placeholder="What are you willing to bring?"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">7</span>What do you predict will happen over the next few weeks?</div>
+      <textarea placeholder="Your honest prediction…"></textarea>
+    </div>
+    <button class="btn-continue" onclick="go('session2')">
+      Continue to session 2 <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </button>
   </div>
+</div>
 
-  <button onclick="go('map')" class="btn">Community Map</button>
-</section>
-
-<!-- ================= COMMUNITY MAP ================= -->
-<section id="map" class="hidden p-6 max-w-4xl mx-auto space-y-4">
-  <h2 class="text-2xl font-semibold">Community Map</h2>
-
-  <p class="text-sm text-slate-600">
-    Add people, groups, and places in your life.
-  </p>
-
-  <div class="flex gap-2">
-    <input id="nodeInput" class="flex-1 p-3 border rounded-xl" placeholder="Add connection"/>
-    <button onclick="addNode()" class="px-4 bg-black text-white rounded-xl">Add</button>
+<!-- SESSION 2 -->
+<div id="session2" class="screen">
+  <nav class="nav">
+    <span class="nav-logo">Community</span>
+    <div class="nav-steps">
+      <div class="step-pip done"></div>
+      <div class="step-pip active"></div>
+      <div class="step-pip"></div>
+      <div class="step-pip"></div>
+    </div>
+  </nav>
+  <div class="session-wrap">
+    <div class="session-header">
+      <p class="session-eyebrow">Session 02</p>
+      <h2 class="session-title-lg">Community <em>exploration</em></h2>
+      <p class="session-desc-sm">Community is belonging, opportunity, and hidden connection.</p>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">1</span>What words come to mind when you hear "community"?</div>
+      <textarea placeholder="First instincts, no filter…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">2</span>What does community mean to you?</div>
+      <textarea placeholder="Your personal definition…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">3</span>What makes an ideal community?</div>
+      <textarea placeholder="The qualities that matter most…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">4</span>What groups have impacted your life most?</div>
+      <textarea placeholder="People, organisations, places…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">5</span>Where do you feel most like yourself?</div>
+      <textarea placeholder="Contexts where you're at ease…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">6</span>Who do you see most often? Has this changed?</div>
+      <textarea placeholder="Map the frequency of your connections…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">7</span>If everything changed tomorrow, who would still be around?</div>
+      <textarea placeholder="Your anchors…"></textarea>
+    </div>
+    <button class="btn-continue" onclick="go('map-screen')">
+      Build your community map <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </button>
   </div>
+</div>
 
-  <div id="canvas" class="relative w-full h-[420px] bg-white border rounded-xl overflow-hidden"></div>
+<!-- MAP -->
+<div id="map-screen" class="screen">
+  <nav class="nav">
+    <span class="nav-logo">Community</span>
+    <div class="nav-steps">
+      <div class="step-pip done"></div>
+      <div class="step-pip done"></div>
+      <div class="step-pip active"></div>
+      <div class="step-pip"></div>
+    </div>
+  </nav>
+  <div class="session-wrap" style="max-width:1100px;padding-top:32px">
+    <div class="session-header" style="margin-bottom:24px">
+      <p class="session-eyebrow">Community map</p>
+      <h2 class="session-title-lg" style="font-size:32px">Your <em>network</em></h2>
+      <p class="session-desc-sm">Add people, groups, and places. Drag to arrange by closeness.</p>
+    </div>
+    <div class="map-layout">
+      <div class="map-sidebar">
+        <div class="map-input-wrap">
+          <input id="nodeInput" class="map-input" placeholder="Name or group…" onkeydown="if(event.key==='Enter')addNode()"/>
+          <div class="map-type-grid" id="typeGrid">
+            <button class="map-type-btn selected" data-type="person" data-color="#c8a96e" onclick="selectType(this)">
+              <i class="ti ti-user" aria-hidden="true"></i>Person
+            </button>
+            <button class="map-type-btn" data-type="group" data-color="#5DCAA5" onclick="selectType(this)">
+              <i class="ti ti-users" aria-hidden="true"></i>Group
+            </button>
+            <button class="map-type-btn" data-type="place" data-color="#378ADD" onclick="selectType(this)">
+              <i class="ti ti-map-pin" aria-hidden="true"></i>Place
+            </button>
+            <button class="map-type-btn" data-type="other" data-color="#D4537E" onclick="selectType(this)">
+              <i class="ti ti-sparkles" aria-hidden="true"></i>Other
+            </button>
+          </div>
+          <button class="btn-add" onclick="addNode()">
+            <i class="ti ti-plus" aria-hidden="true"></i> Add to map
+          </button>
+        </div>
+        <div class="map-nodes-list" id="nodesList"></div>
+      </div>
+      <div class="map-canvas-wrap" id="mapCanvas">
+        <svg id="map-svg"></svg>
+        <div id="centerDot" style="
+          position:absolute;left:50%;top:50%;
+          transform:translate(-50%,-50%);
+          width:48px;height:48px;border-radius:50%;
+          background:var(--ink);display:flex;align-items:center;
+          justify-content:center;color:var(--paper);font-size:18px;
+          z-index:5;pointer-events:none;
+        "><i class="ti ti-user" aria-hidden="true"></i></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#c8a96e"></div>Person</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#5DCAA5"></div>Group</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#378ADD"></div>Place</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#D4537E"></div>Other</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-continue" style="margin-top:24px" onclick="go('session3')">
+      Continue to session 3 <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
 
-  <button onclick="go('session3')" class="btn">Continue</button>
-</section>
+<!-- SESSION 3 -->
+<div id="session3" class="screen">
+  <nav class="nav">
+    <span class="nav-logo">Community</span>
+    <div class="nav-steps">
+      <div class="step-pip done"></div>
+      <div class="step-pip done"></div>
+      <div class="step-pip done"></div>
+      <div class="step-pip active"></div>
+    </div>
+  </nav>
+  <div class="session-wrap">
+    <div class="session-header">
+      <p class="session-eyebrow">Session 03</p>
+      <h2 class="session-title-lg">Altruistic <em>capital</em></h2>
+      <p class="session-desc-sm">Treat this as an experiment, not a test.</p>
+    </div>
 
-<!-- ================= SESSION 3 ================= -->
-<section id="session3" class="hidden p-6 max-w-3xl mx-auto space-y-6">
-  <h2 class="text-2xl font-semibold">Session 3 — Altruistic Capital</h2>
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <span class="section-divider-label">Three good things</span>
+      <div class="section-divider-line"></div>
+    </div>
 
-  <p class="text-sm text-slate-600">
-    Three Good Things — treat as an experiment, not a test.
-  </p>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">1</span>What were three good things today?</div>
+      <textarea placeholder="Big or small, list them…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">2</span>Was anything done with or for someone else?</div>
+      <textarea placeholder="Moments of connection or care…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">3</span>What stood out, and why?</div>
+      <textarea placeholder="What lingers?"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">4</span>What did you contribute to that moment?</div>
+      <textarea placeholder="Your role in it…"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-label"><span class="q-num">5</span>What might the other person have felt?</div>
+      <textarea placeholder="Step into their perspective…"></textarea>
+    </div>
 
-  <textarea class="input" placeholder="Three good things today"></textarea>
-  <textarea class="input" placeholder="Was anything done with or for someone else?"></textarea>
-  <textarea class="input" placeholder="What stood out and why?"></textarea>
-  <textarea class="input" placeholder="What did you contribute to this moment?"></textarea>
-  <textarea class="input" placeholder="What might the other person have felt?"></textarea>
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <span class="section-divider-label">Ikigai</span>
+      <div class="section-divider-line"></div>
+    </div>
 
-  <h3 class="text-xl font-semibold mt-6">Ikigai Reflection</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="q-block">
+        <div class="q-label">What do you <em style="font-style:italic;color:var(--accent-dark)">love?</em></div>
+        <textarea style="min-height:100px" placeholder="Passions, joys…"></textarea>
+      </div>
+      <div class="q-block">
+        <div class="q-label">What are you <em style="font-style:italic;color:var(--accent-dark)">good at?</em></div>
+        <textarea style="min-height:100px" placeholder="Skills, talents…"></textarea>
+      </div>
+      <div class="q-block">
+        <div class="q-label">What does the world <em style="font-style:italic;color:var(--accent-dark)">need?</em></div>
+        <textarea style="min-height:100px" placeholder="Problems you care about…"></textarea>
+      </div>
+      <div class="q-block">
+        <div class="q-label">What can you be <em style="font-style:italic;color:var(--accent-dark)">paid for?</em></div>
+        <textarea style="min-height:100px" placeholder="Marketable abilities…"></textarea>
+      </div>
+    </div>
 
-  <textarea class="input" placeholder="What do you love?"></textarea>
-  <textarea class="input" placeholder="What are you good at?"></textarea>
-  <textarea class="input" placeholder="What does the world need?"></textarea>
-  <textarea class="input" placeholder="What can you be paid for?"></textarea>
+    <button class="btn-continue" onclick="go('done-screen')">
+      Complete the process <i class="ti ti-check" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
 
-  <button onclick="go('done')" class="btn">Finish</button>
-</section>
+<!-- DONE -->
+<div id="done-screen" class="screen">
+  <nav class="nav">
+    <span class="nav-logo">Community</span>
+    <div class="nav-steps">
+      <div class="step-pip done"></div>
+      <div class="step-pip done"></div>
+      <div class="step-pip done"></div>
+      <div class="step-pip done"></div>
+    </div>
+  </nav>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:60px 20px">
+    <div style="text-align:center;max-width:440px">
+      <div class="done-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
+      <h2 class="done-title">All <em style="font-style:italic">done.</em></h2>
+      <p class="done-sub">Your responses are saved locally and ready for Supabase integration. Thank you for completing the process.</p>
+      <button class="done-restart" onclick="go('landing')">Start again</button>
+    </div>
+  </div>
+</div>
 
-<!-- ================= DONE ================= -->
-<section id="done" class="hidden min-h-screen flex flex-col items-center justify-center text-center p-6">
-  <h1 class="text-3xl font-semibold">Complete</h1>
-  <p class="mt-4 text-slate-600 max-w-md">
-    Your responses are saved locally. Ready for Supabase integration.
-  </p>
-</section>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
 
-<!-- ================= STYLES ================= -->
-<style>
-.input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-}
-.btn {
-  width: 100%;
-  padding: 12px;
-  background: black;
-  color: white;
-  border-radius: 12px;
-}
-</style>
-
-<!-- ================= SCRIPT ================= -->
 <script>
 function go(id){
-  document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* simple community map */
-let nodes = [];
+let nodes=[];
+let selectedType={type:'person',color:'#c8a96e'};
+let dragging=null,dragOff={x:0,y:0};
+
+function selectType(btn){
+  document.querySelectorAll('.map-type-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType={type:btn.dataset.type,color:btn.dataset.color};
+}
 
 function addNode(){
-  const input = document.getElementById("nodeInput");
-  if(!input.value) return;
-
+  const inp=document.getElementById('nodeInput');
+  const text=inp.value.trim();
+  if(!text)return;
+  const canvas=document.getElementById('mapCanvas');
+  const w=canvas.offsetWidth,h=canvas.offsetHeight;
+  const cx=w/2,cy=h/2;
+  const angle=Math.random()*Math.PI*2;
+  const dist=90+Math.random()*90;
   nodes.push({
-    text: input.value,
-    x: Math.random()*320,
-    y: Math.random()*320
+    id:Date.now(),text,
+    type:selectedType.type,
+    color:selectedType.color,
+    x:Math.max(60,Math.min(w-60,cx+Math.cos(angle)*dist)),
+    y:Math.max(30,Math.min(h-30,cy+Math.sin(angle)*dist))
   });
-
-  render();
-  input.value = "";
+  inp.value='';
+  renderMap();
+  inp.focus();
 }
 
-function render(){
-  const c = document.getElementById("canvas");
-  c.innerHTML = "";
+function removeNode(id){
+  nodes=nodes.filter(n=>n.id!==id);
+  renderMap();
+}
 
-  nodes.forEach(n => {
-    const el = document.createElement("div");
-    el.innerText = n.text;
-    el.className = "absolute px-3 py-1 bg-slate-100 border rounded-full text-sm";
-    el.style.left = n.x + "px";
-    el.style.top = n.y + "px";
-    c.appendChild(el);
+function renderMap(){
+  const canvas=document.getElementById('mapCanvas');
+  const svg=document.getElementById('map-svg');
+  const w=canvas.offsetWidth,h=canvas.offsetHeight;
+  const cx=w/2,cy=h/2;
+
+  svg.innerHTML='<defs><marker id="ah" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><circle cx="3" cy="3" r="1.5" fill="#e4e1da"/></marker></defs>';
+  svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+
+  nodes.forEach(n=>{
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',cx);line.setAttribute('y1',cy);
+    line.setAttribute('x2',n.x);line.setAttribute('y2',n.y);
+    line.setAttribute('stroke','#e4e1da');
+    line.setAttribute('stroke-width','1.5');
+    line.setAttribute('stroke-dasharray','4 4');
+    svg.appendChild(line);
+  });
+
+  document.querySelectorAll('.map-node-el').forEach(e=>e.remove());
+
+  nodes.forEach(n=>{
+    const el=document.createElement('div');
+    el.className='map-node-el';
+    el.dataset.id=n.id;
+    el.style.left=n.x+'px';
+    el.style.top=n.y+'px';
+    el.innerHTML=`<span class="dot" style="background:${n.color}"></span>${n.text}`;
+
+    el.addEventListener('mousedown',e=>{
+      dragging=n;
+      const rect=el.getBoundingClientRect();
+      const cr=canvas.getBoundingClientRect();
+      dragOff.x=e.clientX-cr.left-n.x;
+      dragOff.y=e.clientY-cr.top-n.y;
+      el.classList.add('dragging');
+      e.preventDefault();
+    });
+    el.addEventListener('touchstart',e=>{
+      dragging=n;
+      const touch=e.touches[0];
+      const cr=canvas.getBoundingClientRect();
+      dragOff.x=touch.clientX-cr.left-n.x;
+      dragOff.y=touch.clientY-cr.top-n.y;
+      el.classList.add('dragging');
+      e.preventDefault();
+    },{passive:false});
+
+    canvas.appendChild(el);
+  });
+
+  const list=document.getElementById('nodesList');
+  list.innerHTML='';
+  nodes.forEach(n=>{
+    const item=document.createElement('div');
+    item.className='map-node-item';
+    item.innerHTML=`
+      <div class="node-type-dot" style="background:${n.color}"></div>
+      <span class="node-item-text">${n.text}</span>
+      <button class="node-remove" onclick="removeNode(${n.id})" aria-label="Remove"><i class="ti ti-x"></i></button>
+    `;
+    list.appendChild(item);
   });
 }
 
-/* ================= SUPABASE READY ================= */
-const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
-
-console.log("Supabase ready for integration");
+document.addEventListener('mousemove',e=>{
+  if(!dragging)return;
+  const canvas=document.getElementById('mapCanvas');
+  const cr=canvas.getBoundingClientRect();
+  const w=canvas.offsetWidth,h=canvas.offsetHeight;
+  dragging.x=Math.max(40,Math.min(w-40,e.clientX-cr.left-dragOff.x));
+  dragging.y=Math.max(20,Math.min(h-20,e.clientY-cr.top-dragOff.y));
+  renderMap();
+});
+document.addEventListener('touchmove',e=>{
+  if(!dragging)return;
+  const canvas=document.getElementById('mapCanvas');
+  const cr=canvas.getBoundingClientRect();
+  const w=canvas.offsetWidth,h=canvas.offsetHeight;
+  const t=e.touches[0];
+  dragging.x=Math.max(40,Math.min(w-40,t.clientX-cr.left-dragOff.x));
+  dragging.y=Math.max(20,Math.min(h-20,t.clientY-cr.top-dragOff.y));
+  renderMap();
+},{passive:false});
+document.addEventListener('mouseup',()=>{ dragging=null; });
+document.addEventListener('touchend',()=>{ dragging=null; });
 </script>
-
 </body>
 </html>
