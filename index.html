@@ -6,596 +6,821 @@
 <title>Community Contribution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Karla:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --ink:#0f0e0d;
-  --ink2:#5a5751;
-  --ink3:#9e9a94;
-  --paper:#faf9f6;
-  --surface:#f2f0eb;
-  --line:#e4e1da;
-  --accent:#c8a96e;
-  --accent-dark:#a07c3a;
-  --serif:'Instrument Serif',Georgia,serif;
-  --sans:'DM Sans',sans-serif;
-  --r:14px;
+  --c0:#0a0908;
+  --c1:#1a1714;
+  --c2:#2e2a24;
+  --c3:#52493e;
+  --c4:#7a6e61;
+  --c5:#a89e91;
+  --c6:#c8bfb0;
+  --c7:#ddd6ca;
+  --c8:#ede8e0;
+  --c9:#f5f1ea;
+  --c10:#faf8f4;
+  --cream:#fdf9f3;
+  --gold:#b8965a;
+  --gold-l:#d4b07a;
+  --gold-d:#8a6830;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Karla',sans-serif;
 }
-
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;height:100%}
 body{
   font-family:var(--sans);
-  background:var(--paper);
-  color:var(--ink);
+  background:var(--cream);
+  color:var(--c1);
   min-height:100vh;
   overflow-x:hidden;
+  cursor:default;
 }
 
-.screen{display:none;min-height:100vh;animation:fadeUp .45s ease both}
-.screen.active{display:flex;flex-direction:column}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+/* GRAIN OVERLAY */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+  pointer-events:none;z-index:9999;opacity:.6;
+}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex;animation:screenIn .6s cubic-bezier(.16,1,.3,1) both}
+@keyframes screenIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 
 /* NAV */
 .nav{
+  position:sticky;top:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:24px 40px;border-bottom:1px solid var(--line);
-  background:var(--paper);position:sticky;top:0;z-index:10;
+  padding:20px 48px;
+  background:rgba(253,249,243,.88);
+  backdrop-filter:blur(20px) saturate(1.4);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border-bottom:1px solid rgba(184,150,90,.12);
 }
-.nav-logo{font-family:var(--serif);font-size:18px;letter-spacing:-.02em}
-.nav-steps{display:flex;gap:6px;align-items:center}
-.step-pip{
-  width:28px;height:4px;border-radius:2px;
-  background:var(--line);transition:background .3s;
+.nav-logo{
+  font-family:var(--serif);font-size:17px;font-weight:300;
+  letter-spacing:.06em;color:var(--c2);
 }
-.step-pip.done{background:var(--ink)}
-.step-pip.active{background:var(--accent)}
+.nav-pips{display:flex;gap:5px;align-items:center}
+.pip{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--c7);transition:all .4s cubic-bezier(.16,1,.3,1);
+}
+.pip.done{background:var(--c3);transform:scale(1)}
+.pip.active{background:var(--gold);width:22px;border-radius:3px}
 
-/* LANDING */
-#landing{
+/* ═══════════ LANDING ═══════════ */
+#landing{position:relative;overflow:hidden;background:var(--c0)}
+
+.land-canvas{
+  position:absolute;inset:0;overflow:hidden;
+}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(80px);
+  animation:orbFloat 12s ease-in-out infinite;
+}
+.orb1{width:600px;height:600px;background:rgba(184,150,90,.10);top:-10%;left:-15%;animation-delay:0s}
+.orb2{width:500px;height:500px;background:rgba(120,100,70,.07);bottom:-20%;right:-10%;animation-delay:-4s}
+.orb3{width:350px;height:350px;background:rgba(200,175,130,.05);top:30%;left:40%;animation-delay:-8s}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-20px) scale(1.05)}
+  66%{transform:translate(-20px,30px) scale(.97)}
+}
+
+.land-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+.land-content{
+  position:relative;z-index:2;
+  flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:60px 40px;text-align:center;position:relative;overflow:hidden;
+  padding:80px 48px 60px;
+  text-align:center;
+  min-height:calc(100vh - 61px);
 }
-.landing-bg{
-  position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 800px 600px at 50% 60%,#f0ebe080 0%,transparent 70%);
+
+.land-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold-l);font-weight:500;margin-bottom:36px;
+  animation:fadeUp .8s .1s both;
 }
-.landing-eyebrow{
-  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent-dark);margin-bottom:20px;font-weight:500;
+.land-eyebrow::before,.land-eyebrow::after{
+  content:'';display:block;width:24px;height:1px;background:rgba(212,176,122,.4);
 }
-.landing-title{
-  font-family:var(--serif);font-size:clamp(42px,7vw,72px);
-  line-height:1.05;letter-spacing:-.03em;
-  color:var(--ink);margin-bottom:12px;
+
+.land-title{
+  font-family:var(--serif);font-weight:300;
+  font-size:clamp(52px,9vw,96px);
+  line-height:.96;letter-spacing:-.02em;
+  color:#f0ece4;
+  margin-bottom:10px;
+  animation:fadeUp .8s .2s both;
 }
-.landing-title em{font-style:italic;color:var(--accent-dark)}
-.landing-sub{
-  font-size:16px;color:var(--ink2);line-height:1.7;
-  max-width:460px;margin:0 auto 48px;
+.land-title-em{
+  display:block;font-style:italic;
+  color:var(--gold-l);font-weight:300;
 }
-.sessions-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;max-width:640px;width:100%;margin:0 auto 48px;
+
+.land-sub{
+  font-size:15px;color:rgba(200,191,176,.6);
+  line-height:1.75;max-width:380px;
+  margin:24px auto 52px;
+  font-weight:300;
+  animation:fadeUp .8s .35s both;
 }
-.session-card{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--r);padding:20px;text-align:left;
+
+.land-cards{
+  display:flex;gap:12px;margin-bottom:52px;
+  animation:fadeUp .8s .45s both;
+}
+.land-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;padding:20px 20px;
+  text-align:left;width:160px;
+  backdrop-filter:blur(10px);
+  transition:all .4s cubic-bezier(.16,1,.3,1);
+  cursor:default;
+}
+.land-card:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(212,176,122,.2);
+  transform:translateY(-3px);
+}
+.land-card-num{
+  font-family:var(--serif);font-size:28px;font-weight:300;
+  color:rgba(212,176,122,.3);line-height:1;margin-bottom:12px;
+}
+.land-card.active-card .land-card-num{color:var(--gold-l)}
+.land-card-title{font-size:12px;font-weight:500;color:rgba(240,236,228,.7);margin-bottom:4px}
+.land-card-desc{font-size:11px;color:rgba(200,191,176,.45);line-height:1.5}
+
+.btn-begin{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold);color:#0a0908;
+  padding:15px 36px;border-radius:100px;
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  letter-spacing:.04em;border:none;cursor:pointer;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  animation:fadeUp .8s .55s both;
   position:relative;overflow:hidden;
 }
-.session-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:var(--line);
+.btn-begin::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0);
+  transition:background .3s;
 }
-.session-card.s1::before{background:var(--accent)}
-.session-num{
-  font-family:var(--serif);font-size:32px;color:var(--line);
-  line-height:1;margin-bottom:10px;
-}
-.session-card.s1 .session-num{color:var(--accent)}
-.session-title{font-size:13px;font-weight:500;margin-bottom:4px}
-.session-desc{font-size:12px;color:var(--ink3);line-height:1.5}
-.btn-main{
-  display:inline-flex;align-items:center;gap:10px;
-  background:var(--ink);color:var(--paper);
-  padding:14px 32px;border-radius:100px;
-  font-family:var(--sans);font-size:14px;font-weight:500;
-  border:none;cursor:pointer;transition:opacity .2s,transform .15s;
-  letter-spacing:.01em;
-}
-.btn-main:hover{opacity:.85;transform:translateY(-1px)}
-.btn-main:active{transform:scale(.98)}
-.btn-main i{font-size:16px}
+.btn-begin:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 12px 40px rgba(184,150,90,.35)}
+.btn-begin:hover::before{background:rgba(255,255,255,.1)}
+.btn-begin:active{transform:scale(.98)}
+.btn-begin i{font-size:15px}
 
-/* SESSION PAGES */
-.session-wrap{
-  flex:1;padding:48px 40px;max-width:700px;width:100%;
-  margin:0 auto;
-}
-.session-header{margin-bottom:40px}
-.session-eyebrow{
-  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent-dark);margin-bottom:12px;font-weight:500;
-}
-.session-title-lg{
-  font-family:var(--serif);font-size:clamp(28px,4vw,42px);
-  line-height:1.1;letter-spacing:-.025em;margin-bottom:10px;
-}
-.session-title-lg em{font-style:italic}
-.session-desc-sm{font-size:14px;color:var(--ink2);line-height:1.6}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 
-.q-block{margin-bottom:28px}
-.q-label{
-  font-size:13px;color:var(--ink2);margin-bottom:8px;
-  display:flex;align-items:baseline;gap:8px;line-height:1.5;
+/* ═══════════ SESSION PAGES ═══════════ */
+.session-body{
+  flex:1;display:grid;
+  grid-template-columns:240px 1fr;
+  max-width:1080px;width:100%;
+  margin:0 auto;padding:48px 48px 80px;
+  gap:64px;
+  align-items:start;
 }
-.q-num{
-  font-family:var(--serif);font-size:20px;color:var(--line);
-  flex-shrink:0;line-height:1;
+
+.session-sidebar{
+  position:sticky;top:90px;
 }
+.s-eyebrow{
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);font-weight:500;margin-bottom:16px;
+}
+.s-title{
+  font-family:var(--serif);font-size:clamp(32px,4vw,46px);
+  font-weight:300;line-height:1.05;letter-spacing:-.02em;
+  color:var(--c1);margin-bottom:14px;
+}
+.s-title em{font-style:italic;color:var(--gold-d)}
+.s-desc{font-size:13px;color:var(--c4);line-height:1.7;font-weight:300}
+
+.s-progress{margin-top:32px;display:flex;flex-direction:column;gap:8px}
+.s-prog-item{
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;color:var(--c5);
+  opacity:.5;transition:opacity .3s;
+}
+.s-prog-item.active-prog{opacity:1;color:var(--c2)}
+.s-prog-item.done-prog{opacity:.7}
+.s-prog-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--c6);flex-shrink:0;
+}
+.s-prog-item.active-prog .s-prog-dot{background:var(--gold);width:7px;height:7px}
+.s-prog-item.done-prog .s-prog-dot{background:var(--c3)}
+
+/* QUESTIONS */
+.questions{display:flex;flex-direction:column;gap:6px}
+
+.q-card{
+  background:var(--cream);
+  border:1px solid rgba(184,150,90,.08);
+  border-radius:20px;
+  overflow:hidden;
+  transition:all .35s cubic-bezier(.16,1,.3,1);
+  animation:cardIn .5s both;
+}
+.q-card:nth-child(1){animation-delay:.05s}
+.q-card:nth-child(2){animation-delay:.1s}
+.q-card:nth-child(3){animation-delay:.15s}
+.q-card:nth-child(4){animation-delay:.2s}
+.q-card:nth-child(5){animation-delay:.25s}
+.q-card:nth-child(6){animation-delay:.3s}
+.q-card:nth-child(7){animation-delay:.35s}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.q-card:focus-within{
+  border-color:rgba(184,150,90,.28);
+  box-shadow:0 0 0 4px rgba(184,150,90,.05),0 4px 20px rgba(0,0,0,.04);
+  transform:translateY(-1px);
+}
+
+.q-header{
+  padding:18px 22px 0;
+  display:flex;align-items:baseline;gap:12px;
+}
+.q-idx{
+  font-family:var(--serif);font-size:22px;font-weight:300;
+  color:rgba(184,150,90,.3);line-height:1;flex-shrink:0;
+  transition:color .3s;
+}
+.q-card:focus-within .q-idx{color:var(--gold)}
+.q-label-text{
+  font-size:13px;color:var(--c3);line-height:1.55;font-weight:400;
+}
+
 textarea{
-  width:100%;border:1px solid var(--line);border-radius:var(--r);
-  padding:14px 16px;font-family:var(--sans);font-size:14px;
-  color:var(--ink);background:var(--paper);resize:vertical;
-  min-height:80px;line-height:1.6;transition:border-color .2s;
-  outline:none;
+  width:100%;border:none;outline:none;
+  background:transparent;resize:none;
+  font-family:var(--sans);font-size:14px;font-weight:300;
+  color:var(--c1);line-height:1.75;
+  padding:10px 22px 18px 22px;
+  min-height:72px;overflow:hidden;
+  caret-color:var(--gold);
+  transition:color .2s;
 }
-textarea:focus{border-color:var(--accent)}
-textarea::placeholder{color:var(--ink3)}
+textarea::placeholder{color:var(--c6);font-style:italic;font-size:13px}
+textarea::selection{background:rgba(184,150,90,.15)}
 
-.section-divider{
-  display:flex;align-items:center;gap:16px;margin:36px 0 28px;
+/* SECTION DIVIDER */
+.divider-ornament{
+  display:flex;align-items:center;gap:16px;
+  margin:32px 0 20px;
 }
-.section-divider-line{flex:1;height:1px;background:var(--line)}
-.section-divider-label{
-  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink3);font-weight:500;white-space:nowrap;
+.div-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--c7),transparent)}
+.div-label{
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--c5);font-weight:500;white-space:nowrap;
+}
+.div-diamond{
+  width:5px;height:5px;background:var(--gold-l);
+  transform:rotate(45deg);flex-shrink:0;
 }
 
+/* IKIGAI GRID */
+.ikigai-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ik-card{
+  background:var(--cream);border:1px solid rgba(184,150,90,.08);
+  border-radius:20px;overflow:hidden;
+  transition:all .35s cubic-bezier(.16,1,.3,1);
+}
+.ik-card:focus-within{
+  border-color:rgba(184,150,90,.28);
+  box-shadow:0 0 0 4px rgba(184,150,90,.05),0 4px 20px rgba(0,0,0,.04);
+  transform:translateY(-1px);
+}
+.ik-label{
+  padding:14px 18px 0;
+  font-size:12px;color:var(--c4);font-weight:400;
+  font-style:italic;font-family:var(--serif);font-size:16px;
+}
+
+/* CTA BUTTON */
 .btn-continue{
-  width:100%;background:var(--ink);color:var(--paper);
-  padding:15px;border-radius:100px;font-family:var(--sans);
-  font-size:14px;font-weight:500;border:none;cursor:pointer;
-  transition:opacity .2s,transform .15s;margin-top:12px;
-  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;margin-top:20px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--c1);color:var(--c9);
+  padding:16px;border-radius:100px;
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  letter-spacing:.04em;border:none;cursor:pointer;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  position:relative;overflow:hidden;
 }
-.btn-continue:hover{opacity:.85;transform:translateY(-1px)}
+.btn-continue::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0);transition:background .3s;
+}
+.btn-continue:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.18)}
+.btn-continue:hover::before{background:rgba(255,255,255,.07)}
 .btn-continue:active{transform:scale(.98)}
 .btn-continue i{font-size:16px}
 
-/* MAP */
-#map-screen .session-wrap{max-width:none;padding:32px 40px}
-.map-layout{display:grid;grid-template-columns:300px 1fr;gap:24px;flex:1}
-.map-sidebar{display:flex;flex-direction:column;gap:16px}
-.map-sidebar-header{margin-bottom:4px}
-.map-input-wrap{display:flex;flex-direction:column;gap:8px}
-.map-input{
-  width:100%;border:1px solid var(--line);border-radius:var(--r);
-  padding:12px 14px;font-family:var(--sans);font-size:13px;
-  color:var(--ink);background:var(--paper);outline:none;
-  transition:border-color .2s;
+/* ═══════════ MAP ═══════════ */
+#map-screen .screen-inner{
+  flex:1;display:flex;flex-direction:column;
+  max-width:1200px;width:100%;
+  margin:0 auto;padding:40px 48px 60px;
 }
-.map-input:focus{border-color:var(--accent)}
-.map-input::placeholder{color:var(--ink3)}
-.map-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.map-type-btn{
-  padding:8px;border:1px solid var(--line);border-radius:10px;
-  background:var(--paper);font-family:var(--sans);font-size:12px;
-  color:var(--ink2);cursor:pointer;transition:all .15s;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-}
-.map-type-btn i{font-size:18px;color:var(--ink3)}
-.map-type-btn:hover,.map-type-btn.selected{
-  background:var(--surface);border-color:var(--ink);color:var(--ink);
-}
-.map-type-btn.selected i{color:var(--ink)}
-.btn-add{
-  width:100%;background:var(--ink);color:var(--paper);
-  padding:11px;border-radius:100px;font-family:var(--sans);
-  font-size:13px;font-weight:500;border:none;cursor:pointer;
-  transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:6px;
-}
-.btn-add:hover{opacity:.8}
-.btn-add i{font-size:15px}
+#map-screen .s-eyebrow{margin-bottom:8px}
+#map-screen .s-title{font-size:36px;margin-bottom:6px}
+#map-screen .s-desc{font-size:13px;margin-bottom:28px}
 
-.map-nodes-list{
-  flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;
+.map-body{
+  display:grid;grid-template-columns:260px 1fr;
+  gap:20px;flex:1;min-height:540px;
 }
-.map-node-item{
-  display:flex;align-items:center;gap:8px;padding:8px 10px;
-  background:var(--surface);border-radius:10px;border:1px solid var(--line);
-  font-size:12px;
+
+.map-sidebar-panel{
+  display:flex;flex-direction:column;gap:12px;
 }
-.node-type-dot{
-  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+.map-input-group{
+  background:var(--cream);border:1px solid rgba(184,150,90,.1);
+  border-radius:20px;padding:18px;
 }
-.node-item-text{flex:1;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.map-input-label{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--c5);font-weight:500;margin-bottom:10px;
+}
+.map-text-input{
+  width:100%;border:1px solid var(--c7);border-radius:12px;
+  padding:11px 14px;font-family:var(--sans);font-size:13px;
+  color:var(--c1);background:var(--c10);outline:none;
+  transition:border-color .2s;font-weight:300;
+}
+.map-text-input:focus{border-color:var(--gold)}
+.map-text-input::placeholder{color:var(--c5);font-style:italic}
+
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}
+.type-btn{
+  padding:10px 6px;border:1px solid var(--c7);border-radius:12px;
+  background:var(--c10);font-family:var(--sans);font-size:11px;
+  color:var(--c4);cursor:pointer;
+  transition:all .2s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  font-weight:400;
+}
+.type-btn i{font-size:16px;color:var(--c5)}
+.type-btn:hover{background:var(--c9);border-color:var(--c6)}
+.type-btn.selected{
+  background:var(--c1);border-color:var(--c1);color:var(--c9);
+}
+.type-btn.selected i{color:var(--gold-l)}
+
+.btn-add-node{
+  width:100%;background:var(--gold);color:var(--c0);
+  padding:12px;border-radius:100px;font-family:var(--sans);
+  font-size:12px;font-weight:500;border:none;cursor:pointer;
+  letter-spacing:.04em;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-add-node:hover{box-shadow:0 8px 24px rgba(184,150,90,.35);transform:translateY(-1px)}
+.btn-add-node:active{transform:scale(.98)}
+
+.nodes-list-panel{
+  background:var(--cream);border:1px solid rgba(184,150,90,.1);
+  border-radius:20px;padding:16px;
+  flex:1;overflow-y:auto;
+  display:flex;flex-direction:column;gap:6px;
+  max-height:280px;
+}
+.node-list-empty{
+  font-size:12px;color:var(--c6);font-style:italic;
+  text-align:center;padding:16px 0;
+}
+.node-list-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;background:var(--c10);
+  border-radius:10px;border:1px solid var(--c8);
+  font-size:12px;animation:nodeItemIn .3s both;
+}
+@keyframes nodeItemIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.node-list-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.node-list-text{flex:1;color:var(--c2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .node-remove{
-  background:none;border:none;cursor:pointer;color:var(--ink3);
-  padding:2px;display:flex;align-items:center;transition:color .15s;
-  flex-shrink:0;
+  background:none;border:none;cursor:pointer;
+  color:var(--c6);display:flex;align-items:center;
+  padding:2px;transition:color .15s;
 }
-.node-remove:hover{color:var(--ink)}
-.node-remove i{font-size:14px}
+.node-remove:hover{color:var(--c2)}
+.node-remove i{font-size:13px}
 
-.map-canvas-wrap{
-  position:relative;background:var(--surface);
-  border:1px solid var(--line);border-radius:18px;overflow:hidden;
-  min-height:500px;
+/* MAP CANVAS */
+.map-canvas{
+  position:relative;
+  background:var(--c0);
+  border-radius:24px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.04);
 }
-#map-svg{position:absolute;inset:0;width:100%;height:100%}
-.map-node-el{
-  position:absolute;cursor:move;user-select:none;
-  display:flex;align-items:center;gap:6px;
-  padding:8px 14px;border-radius:100px;
-  background:var(--paper);border:1px solid var(--line);
-  font-family:var(--sans);font-size:12px;color:var(--ink);
+.map-canvas-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(184,150,90,.04) 0%,transparent 70%);
+  animation:bgPulse 6s ease-in-out infinite;
+}
+@keyframes bgPulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+.map-canvas-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+#map-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+
+.map-center-node{
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  transition:border-color .15s;white-space:nowrap;
+  z-index:5;pointer-events:none;
 }
-.map-node-el:hover{border-color:var(--accent)}
-.map-node-el.dragging{opacity:.85;z-index:10}
-.map-node-el .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.map-legend{
-  position:absolute;bottom:16px;left:16px;
-  display:flex;gap:12px;flex-wrap:wrap;
-}
-.legend-item{
-  display:flex;align-items:center;gap:5px;
-  font-size:11px;color:var(--ink3);
-}
-.legend-dot{width:7px;height:7px;border-radius:50%}
-
-/* DONE */
-#done-screen{align-items:center;justify-content:center;text-align:center;padding:60px 40px}
-.done-icon{
-  width:72px;height:72px;border-radius:50%;
-  background:var(--surface);border:1px solid var(--line);
+.center-ring{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--gold);
   display:flex;align-items:center;justify-content:center;
-  margin:0 auto 28px;font-size:28px;color:var(--ink);
+  position:relative;
+  box-shadow:0 0 0 12px rgba(184,150,90,.08),0 0 0 24px rgba(184,150,90,.04);
+  animation:centerPulse 4s ease-in-out infinite;
 }
-.done-title{font-family:var(--serif);font-size:42px;margin-bottom:12px;letter-spacing:-.03em}
-.done-sub{font-size:15px;color:var(--ink2);line-height:1.7;max-width:360px;margin:0 auto 36px}
-.done-restart{
-  background:none;border:1px solid var(--line);
-  padding:11px 28px;border-radius:100px;font-family:var(--sans);
-  font-size:13px;color:var(--ink2);cursor:pointer;transition:all .15s;
+@keyframes centerPulse{
+  0%,100%{box-shadow:0 0 0 12px rgba(184,150,90,.08),0 0 0 24px rgba(184,150,90,.04)}
+  50%{box-shadow:0 0 0 16px rgba(184,150,90,.12),0 0 0 32px rgba(184,150,90,.05)}
 }
-.done-restart:hover{border-color:var(--ink);color:var(--ink)}
+.center-ring i{font-size:20px;color:var(--c0)}
 
-@media(max-width:640px){
-  .sessions-grid{grid-template-columns:1fr}
+.map-node-pill{
+  position:absolute;
+  display:flex;align-items:center;gap:7px;
+  padding:9px 16px;
+  background:rgba(30,27,22,.88);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:100px;
+  font-family:var(--sans);font-size:12px;
+  color:rgba(240,236,228,.85);
+  cursor:move;user-select:none;
+  transform:translate(-50%,-50%);
+  transition:border-color .2s,box-shadow .2s;
+  white-space:nowrap;
+  animation:pillIn .4s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes pillIn{from{opacity:0;transform:translate(-50%,-50%) scale(.7)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.map-node-pill:hover{border-color:rgba(255,255,255,.18);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.map-node-pill.dragging{opacity:.9;z-index:20;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.pill-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+.map-legend{
+  position:absolute;bottom:16px;right:16px;
+  display:flex;gap:14px;flex-wrap:wrap;
+}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(200,191,176,.4)}
+.leg-dot{width:6px;height:6px;border-radius:50%}
+
+/* ═══════════ DONE ═══════════ */
+#done-screen{
+  background:var(--c0);
+  align-items:center;justify-content:center;
+  text-align:center;padding:60px 40px;
+  position:relative;overflow:hidden;
+}
+#done-screen .land-canvas{opacity:.6}
+.done-inner{position:relative;z-index:2}
+.done-glyph{
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 32px;
+  animation:doneIn .8s cubic-bezier(.16,1,.3,1) both;
+}
+.done-glyph i{font-size:24px;color:var(--gold-l)}
+@keyframes doneIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.done-title{
+  font-family:var(--serif);font-size:clamp(44px,7vw,72px);
+  font-weight:300;color:#f0ece4;letter-spacing:-.02em;
+  margin-bottom:14px;animation:fadeUp .8s .1s both;
+}
+.done-title em{font-style:italic;color:var(--gold-l)}
+.done-sub{
+  font-size:14px;color:rgba(200,191,176,.55);line-height:1.75;
+  max-width:340px;margin:0 auto 40px;font-weight:300;
+  animation:fadeUp .8s .2s both;
+}
+.done-restart{
+  display:inline-flex;align-items:center;gap:8px;
+  background:none;border:1px solid rgba(255,255,255,.12);
+  padding:12px 28px;border-radius:100px;
+  font-family:var(--sans);font-size:12px;font-weight:500;
+  color:rgba(200,191,176,.6);cursor:pointer;letter-spacing:.06em;
+  transition:all .3s;text-transform:uppercase;
+  animation:fadeUp .8s .3s both;
+}
+.done-restart:hover{border-color:rgba(212,176,122,.4);color:var(--gold-l)}
+
+/* MOBILE */
+@media(max-width:700px){
   .nav{padding:16px 20px}
-  .session-wrap{padding:32px 20px}
-  .map-layout{grid-template-columns:1fr;grid-template-rows:auto 1fr}
-  #map-screen .session-wrap{padding:20px}
-  .map-canvas-wrap{min-height:360px}
+  .session-body{
+    grid-template-columns:1fr;padding:24px 20px 60px;gap:28px;
+  }
+  .session-sidebar{position:static}
+  .s-progress{display:none}
+  .map-body{grid-template-columns:1fr;min-height:auto}
+  .map-canvas{min-height:380px}
+  #map-screen .screen-inner{padding:24px 20px 48px}
+  .land-cards{flex-direction:column;width:100%;max-width:320px}
+  .land-card{width:100%}
+  .land-content{padding:60px 24px 40px}
+  .ikigai-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- LANDING -->
+<!-- ═══════════ LANDING ═══════════ -->
 <div id="landing" class="screen active">
-  <nav class="nav">
-    <span class="nav-logo">Community</span>
-    <div class="nav-steps" id="nav-steps-landing">
-      <div class="step-pip active"></div>
-      <div class="step-pip"></div>
-      <div class="step-pip"></div>
-      <div class="step-pip"></div>
+  <nav class="nav" style="background:transparent;border-color:rgba(255,255,255,.06)">
+    <span class="nav-logo" style="color:rgba(240,236,228,.7)">Community</span>
+    <div class="nav-pips">
+      <div class="pip active"></div>
+      <div class="pip"></div>
+      <div class="pip"></div>
+      <div class="pip"></div>
     </div>
   </nav>
-  <div class="landing-bg"></div>
-  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:40px 20px">
-    <p class="landing-eyebrow">Guided reflection</p>
-    <h1 class="landing-title">Find your<br><em>contribution</em></h1>
-    <p class="landing-sub">A three-session process exploring community, meaning, and career direction through the lens of what you give.</p>
-    <div class="sessions-grid">
-      <div class="session-card s1">
-        <div class="session-num">01</div>
-        <div class="session-title">Initial intake</div>
-        <div class="session-desc">Goals, expectations, purpose</div>
+  <div class="land-canvas">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="land-grid"></div>
+  </div>
+  <div class="land-content">
+    <p class="land-eyebrow">Guided reflection</p>
+    <h1 class="land-title">
+      Find your<br>
+      <span class="land-title-em">contribution</span>
+    </h1>
+    <p class="land-sub">A three-session process exploring community, meaning, and career direction through the lens of what you give.</p>
+    <div class="land-cards">
+      <div class="land-card active-card">
+        <div class="land-card-num">01</div>
+        <div class="land-card-title">Initial intake</div>
+        <div class="land-card-desc">Goals, expectations, purpose</div>
       </div>
-      <div class="session-card">
-        <div class="session-num">02</div>
-        <div class="session-title">Community</div>
-        <div class="session-desc">Belonging, connection, identity</div>
+      <div class="land-card">
+        <div class="land-card-num">02</div>
+        <div class="land-card-title">Community</div>
+        <div class="land-card-desc">Belonging, connection, identity</div>
       </div>
-      <div class="session-card">
-        <div class="session-num">03</div>
-        <div class="session-title">Altruistic capital</div>
-        <div class="session-desc">Three good things &amp; ikigai</div>
+      <div class="land-card">
+        <div class="land-card-num">03</div>
+        <div class="land-card-title">Altruistic capital</div>
+        <div class="land-card-desc">Three good things &amp; ikigai</div>
       </div>
     </div>
-    <button class="btn-main" onclick="go('session1')">
+    <button class="btn-begin" onclick="go('session1')">
       Begin session 1
       <i class="ti ti-arrow-right" aria-hidden="true"></i>
     </button>
   </div>
 </div>
 
-<!-- SESSION 1 -->
+<!-- ═══════════ SESSION 1 ═══════════ -->
 <div id="session1" class="screen">
   <nav class="nav">
     <span class="nav-logo">Community</span>
-    <div class="nav-steps">
-      <div class="step-pip active"></div>
-      <div class="step-pip"></div>
-      <div class="step-pip"></div>
-      <div class="step-pip"></div>
+    <div class="nav-pips">
+      <div class="pip active"></div>
+      <div class="pip"></div>
+      <div class="pip"></div>
+      <div class="pip"></div>
     </div>
   </nav>
-  <div class="session-wrap">
-    <div class="session-header">
-      <p class="session-eyebrow">Session 01</p>
-      <h2 class="session-title-lg">Initial <em>intake</em></h2>
-      <p class="session-desc-sm">Clarify your goals, expectations, and purpose for this process.</p>
+  <div class="session-body">
+    <aside class="session-sidebar">
+      <p class="s-eyebrow">Session 01</p>
+      <h2 class="s-title">Initial <em>intake</em></h2>
+      <p class="s-desc">Clarify your goals, expectations, and purpose for this process.</p>
+      <div class="s-progress">
+        <div class="s-prog-item active-prog"><div class="s-prog-dot"></div>Session 1</div>
+        <div class="s-prog-item"><div class="s-prog-dot"></div>Session 2</div>
+        <div class="s-prog-item"><div class="s-prog-dot"></div>Map</div>
+        <div class="s-prog-item"><div class="s-prog-dot"></div>Session 3</div>
+      </div>
+    </aside>
+    <div>
+      <div class="questions">
+        <div class="q-card"><div class="q-header"><span class="q-idx">1</span><span class="q-label-text">What would you like to be different?</span></div><textarea placeholder="Describe the change you're hoping for…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">2</span><span class="q-label-text">What obstacles exist, and what will help you overcome them?</span></div><textarea placeholder="Be honest about what's in the way…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">3</span><span class="q-label-text">What stands out to you right now, and why?</span></div><textarea placeholder="What's on your mind as you begin?…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">4</span><span class="q-label-text">What are your best hopes for our time together?</span></div><textarea placeholder="Dream a little…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">5</span><span class="q-label-text">What goals would you like to achieve?</span></div><textarea placeholder="Concrete or abstract, list them…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">6</span><span class="q-label-text">What will you contribute yourself as part of this process?</span></div><textarea placeholder="What are you willing to bring?…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">7</span><span class="q-label-text">What do you predict will happen over the next few weeks?</span></div><textarea placeholder="Your honest prediction…" oninput="grow(this)"></textarea></div>
+      </div>
+      <button class="btn-continue" onclick="go('session2')">Continue to session 2 <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
     </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">1</span>What would you like to be different?</div>
-      <textarea placeholder="Describe the change you're hoping for…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">2</span>What obstacles exist, and what will help you overcome them?</div>
-      <textarea placeholder="Be honest about what's in the way…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">3</span>What stands out to you right now, and why?</div>
-      <textarea placeholder="What's on your mind as you begin?"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">4</span>What are your best hopes for our time together?</div>
-      <textarea placeholder="Dream a little…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">5</span>What goals would you like to achieve?</div>
-      <textarea placeholder="Concrete or abstract, list them…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">6</span>What will you contribute yourself as part of this process?</div>
-      <textarea placeholder="What are you willing to bring?"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">7</span>What do you predict will happen over the next few weeks?</div>
-      <textarea placeholder="Your honest prediction…"></textarea>
-    </div>
-    <button class="btn-continue" onclick="go('session2')">
-      Continue to session 2 <i class="ti ti-arrow-right" aria-hidden="true"></i>
-    </button>
   </div>
 </div>
 
-<!-- SESSION 2 -->
+<!-- ═══════════ SESSION 2 ═══════════ -->
 <div id="session2" class="screen">
   <nav class="nav">
     <span class="nav-logo">Community</span>
-    <div class="nav-steps">
-      <div class="step-pip done"></div>
-      <div class="step-pip active"></div>
-      <div class="step-pip"></div>
-      <div class="step-pip"></div>
+    <div class="nav-pips">
+      <div class="pip done"></div>
+      <div class="pip active"></div>
+      <div class="pip"></div>
+      <div class="pip"></div>
     </div>
   </nav>
-  <div class="session-wrap">
-    <div class="session-header">
-      <p class="session-eyebrow">Session 02</p>
-      <h2 class="session-title-lg">Community <em>exploration</em></h2>
-      <p class="session-desc-sm">Community is belonging, opportunity, and hidden connection.</p>
+  <div class="session-body">
+    <aside class="session-sidebar">
+      <p class="s-eyebrow">Session 02</p>
+      <h2 class="s-title">Community <em>exploration</em></h2>
+      <p class="s-desc">Community is belonging, opportunity, and hidden connection.</p>
+      <div class="s-progress">
+        <div class="s-prog-item done-prog"><div class="s-prog-dot"></div>Session 1</div>
+        <div class="s-prog-item active-prog"><div class="s-prog-dot"></div>Session 2</div>
+        <div class="s-prog-item"><div class="s-prog-dot"></div>Map</div>
+        <div class="s-prog-item"><div class="s-prog-dot"></div>Session 3</div>
+      </div>
+    </aside>
+    <div>
+      <div class="questions">
+        <div class="q-card"><div class="q-header"><span class="q-idx">1</span><span class="q-label-text">What words come to mind when you hear "community"?</span></div><textarea placeholder="First instincts, no filter…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">2</span><span class="q-label-text">What does community mean to you?</span></div><textarea placeholder="Your personal definition…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">3</span><span class="q-label-text">What makes an ideal community?</span></div><textarea placeholder="The qualities that matter most…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">4</span><span class="q-label-text">What groups have impacted your life most?</span></div><textarea placeholder="People, organisations, places…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">5</span><span class="q-label-text">Where do you feel most like yourself?</span></div><textarea placeholder="Contexts where you're at ease…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">6</span><span class="q-label-text">Who do you see most often? Has this changed?</span></div><textarea placeholder="Map the frequency of your connections…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">7</span><span class="q-label-text">If everything changed tomorrow, who would still be around?</span></div><textarea placeholder="Your anchors…" oninput="grow(this)"></textarea></div>
+      </div>
+      <button class="btn-continue" onclick="go('map-screen')">Build your community map <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
     </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">1</span>What words come to mind when you hear "community"?</div>
-      <textarea placeholder="First instincts, no filter…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">2</span>What does community mean to you?</div>
-      <textarea placeholder="Your personal definition…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">3</span>What makes an ideal community?</div>
-      <textarea placeholder="The qualities that matter most…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">4</span>What groups have impacted your life most?</div>
-      <textarea placeholder="People, organisations, places…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">5</span>Where do you feel most like yourself?</div>
-      <textarea placeholder="Contexts where you're at ease…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">6</span>Who do you see most often? Has this changed?</div>
-      <textarea placeholder="Map the frequency of your connections…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">7</span>If everything changed tomorrow, who would still be around?</div>
-      <textarea placeholder="Your anchors…"></textarea>
-    </div>
-    <button class="btn-continue" onclick="go('map-screen')">
-      Build your community map <i class="ti ti-arrow-right" aria-hidden="true"></i>
-    </button>
   </div>
 </div>
 
-<!-- MAP -->
+<!-- ═══════════ MAP ═══════════ -->
 <div id="map-screen" class="screen">
   <nav class="nav">
     <span class="nav-logo">Community</span>
-    <div class="nav-steps">
-      <div class="step-pip done"></div>
-      <div class="step-pip done"></div>
-      <div class="step-pip active"></div>
-      <div class="step-pip"></div>
+    <div class="nav-pips">
+      <div class="pip done"></div>
+      <div class="pip done"></div>
+      <div class="pip active"></div>
+      <div class="pip"></div>
     </div>
   </nav>
-  <div class="session-wrap" style="max-width:1100px;padding-top:32px">
-    <div class="session-header" style="margin-bottom:24px">
-      <p class="session-eyebrow">Community map</p>
-      <h2 class="session-title-lg" style="font-size:32px">Your <em>network</em></h2>
-      <p class="session-desc-sm">Add people, groups, and places. Drag to arrange by closeness.</p>
-    </div>
-    <div class="map-layout">
-      <div class="map-sidebar">
-        <div class="map-input-wrap">
-          <input id="nodeInput" class="map-input" placeholder="Name or group…" onkeydown="if(event.key==='Enter')addNode()"/>
-          <div class="map-type-grid" id="typeGrid">
-            <button class="map-type-btn selected" data-type="person" data-color="#c8a96e" onclick="selectType(this)">
-              <i class="ti ti-user" aria-hidden="true"></i>Person
-            </button>
-            <button class="map-type-btn" data-type="group" data-color="#5DCAA5" onclick="selectType(this)">
-              <i class="ti ti-users" aria-hidden="true"></i>Group
-            </button>
-            <button class="map-type-btn" data-type="place" data-color="#378ADD" onclick="selectType(this)">
-              <i class="ti ti-map-pin" aria-hidden="true"></i>Place
-            </button>
-            <button class="map-type-btn" data-type="other" data-color="#D4537E" onclick="selectType(this)">
-              <i class="ti ti-sparkles" aria-hidden="true"></i>Other
-            </button>
+  <div class="screen-inner">
+    <p class="s-eyebrow">Community map</p>
+    <h2 class="s-title">Your <em>network</em></h2>
+    <p class="s-desc">Add people, groups, and places that are part of your world. Drag to arrange by closeness.</p>
+    <div class="map-body">
+      <div class="map-sidebar-panel">
+        <div class="map-input-group">
+          <p class="map-input-label">Add connection</p>
+          <input id="nodeInput" class="map-text-input" placeholder="Name or group…" onkeydown="if(event.key==='Enter')addNode()"/>
+          <div class="type-grid" id="typeGrid">
+            <button class="type-btn selected" data-type="person" data-color="#b8965a" onclick="selectType(this)"><i class="ti ti-user" aria-hidden="true"></i>Person</button>
+            <button class="type-btn" data-type="group" data-color="#5DCAA5" onclick="selectType(this)"><i class="ti ti-users" aria-hidden="true"></i>Group</button>
+            <button class="type-btn" data-type="place" data-color="#378ADD" onclick="selectType(this)"><i class="ti ti-map-pin" aria-hidden="true"></i>Place</button>
+            <button class="type-btn" data-type="other" data-color="#D4537E" onclick="selectType(this)"><i class="ti ti-sparkles" aria-hidden="true"></i>Other</button>
           </div>
-          <button class="btn-add" onclick="addNode()">
-            <i class="ti ti-plus" aria-hidden="true"></i> Add to map
-          </button>
+          <button class="btn-add-node" onclick="addNode()"><i class="ti ti-plus" aria-hidden="true"></i>Add to map</button>
         </div>
-        <div class="map-nodes-list" id="nodesList"></div>
+        <div class="nodes-list-panel" id="nodesList">
+          <div class="node-list-empty" id="listEmpty">Your connections will appear here</div>
+        </div>
       </div>
-      <div class="map-canvas-wrap" id="mapCanvas">
+      <div class="map-canvas" id="mapCanvas">
+        <div class="map-canvas-bg"></div>
+        <div class="map-canvas-grid"></div>
         <svg id="map-svg"></svg>
-        <div id="centerDot" style="
-          position:absolute;left:50%;top:50%;
-          transform:translate(-50%,-50%);
-          width:48px;height:48px;border-radius:50%;
-          background:var(--ink);display:flex;align-items:center;
-          justify-content:center;color:var(--paper);font-size:18px;
-          z-index:5;pointer-events:none;
-        "><i class="ti ti-user" aria-hidden="true"></i></div>
+        <div class="map-center-node">
+          <div class="center-ring"><i class="ti ti-user" aria-hidden="true"></i></div>
+        </div>
         <div class="map-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#c8a96e"></div>Person</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#5DCAA5"></div>Group</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#378ADD"></div>Place</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#D4537E"></div>Other</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#b8965a"></div>Person</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#5DCAA5"></div>Group</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#378ADD"></div>Place</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#D4537E"></div>Other</div>
         </div>
       </div>
     </div>
-    <button class="btn-continue" style="margin-top:24px" onclick="go('session3')">
-      Continue to session 3 <i class="ti ti-arrow-right" aria-hidden="true"></i>
-    </button>
+    <button class="btn-continue" onclick="go('session3')">Continue to session 3 <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
   </div>
 </div>
 
-<!-- SESSION 3 -->
+<!-- ═══════════ SESSION 3 ═══════════ -->
 <div id="session3" class="screen">
   <nav class="nav">
     <span class="nav-logo">Community</span>
-    <div class="nav-steps">
-      <div class="step-pip done"></div>
-      <div class="step-pip done"></div>
-      <div class="step-pip done"></div>
-      <div class="step-pip active"></div>
+    <div class="nav-pips">
+      <div class="pip done"></div>
+      <div class="pip done"></div>
+      <div class="pip done"></div>
+      <div class="pip active"></div>
     </div>
   </nav>
-  <div class="session-wrap">
-    <div class="session-header">
-      <p class="session-eyebrow">Session 03</p>
-      <h2 class="session-title-lg">Altruistic <em>capital</em></h2>
-      <p class="session-desc-sm">Treat this as an experiment, not a test.</p>
-    </div>
-
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <span class="section-divider-label">Three good things</span>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">1</span>What were three good things today?</div>
-      <textarea placeholder="Big or small, list them…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">2</span>Was anything done with or for someone else?</div>
-      <textarea placeholder="Moments of connection or care…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">3</span>What stood out, and why?</div>
-      <textarea placeholder="What lingers?"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">4</span>What did you contribute to that moment?</div>
-      <textarea placeholder="Your role in it…"></textarea>
-    </div>
-    <div class="q-block">
-      <div class="q-label"><span class="q-num">5</span>What might the other person have felt?</div>
-      <textarea placeholder="Step into their perspective…"></textarea>
-    </div>
-
-    <div class="section-divider">
-      <div class="section-divider-line"></div>
-      <span class="section-divider-label">Ikigai</span>
-      <div class="section-divider-line"></div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div class="q-block">
-        <div class="q-label">What do you <em style="font-style:italic;color:var(--accent-dark)">love?</em></div>
-        <textarea style="min-height:100px" placeholder="Passions, joys…"></textarea>
+  <div class="session-body">
+    <aside class="session-sidebar">
+      <p class="s-eyebrow">Session 03</p>
+      <h2 class="s-title">Altruistic <em>capital</em></h2>
+      <p class="s-desc">Treat this as an experiment, not a test.</p>
+      <div class="s-progress">
+        <div class="s-prog-item done-prog"><div class="s-prog-dot"></div>Session 1</div>
+        <div class="s-prog-item done-prog"><div class="s-prog-dot"></div>Session 2</div>
+        <div class="s-prog-item done-prog"><div class="s-prog-dot"></div>Map</div>
+        <div class="s-prog-item active-prog"><div class="s-prog-dot"></div>Session 3</div>
       </div>
-      <div class="q-block">
-        <div class="q-label">What are you <em style="font-style:italic;color:var(--accent-dark)">good at?</em></div>
-        <textarea style="min-height:100px" placeholder="Skills, talents…"></textarea>
+    </aside>
+    <div>
+      <div class="divider-ornament"><div class="div-line"></div><div class="div-diamond"></div><span class="div-label">Three good things</span><div class="div-diamond"></div><div class="div-line"></div></div>
+      <div class="questions">
+        <div class="q-card"><div class="q-header"><span class="q-idx">1</span><span class="q-label-text">What were three good things today?</span></div><textarea placeholder="Big or small, list them…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">2</span><span class="q-label-text">Was anything done with or for someone else?</span></div><textarea placeholder="Moments of connection or care…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">3</span><span class="q-label-text">What stood out, and why?</span></div><textarea placeholder="What lingers?…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">4</span><span class="q-label-text">What did you contribute to that moment?</span></div><textarea placeholder="Your role in it…" oninput="grow(this)"></textarea></div>
+        <div class="q-card"><div class="q-header"><span class="q-idx">5</span><span class="q-label-text">What might the other person have felt?</span></div><textarea placeholder="Step into their perspective…" oninput="grow(this)"></textarea></div>
       </div>
-      <div class="q-block">
-        <div class="q-label">What does the world <em style="font-style:italic;color:var(--accent-dark)">need?</em></div>
-        <textarea style="min-height:100px" placeholder="Problems you care about…"></textarea>
+      <div class="divider-ornament" style="margin-top:32px"><div class="div-line"></div><div class="div-diamond"></div><span class="div-label">Ikigai</span><div class="div-diamond"></div><div class="div-line"></div></div>
+      <div class="ikigai-grid">
+        <div class="ik-card"><div class="ik-label">What do you love?</div><textarea placeholder="Passions, joys…" oninput="grow(this)" style="min-height:100px"></textarea></div>
+        <div class="ik-card"><div class="ik-label">What are you good at?</div><textarea placeholder="Skills, talents…" oninput="grow(this)" style="min-height:100px"></textarea></div>
+        <div class="ik-card"><div class="ik-label">What does the world need?</div><textarea placeholder="Problems you care about…" oninput="grow(this)" style="min-height:100px"></textarea></div>
+        <div class="ik-card"><div class="ik-label">What can you be paid for?</div><textarea placeholder="Marketable abilities…" oninput="grow(this)" style="min-height:100px"></textarea></div>
       </div>
-      <div class="q-block">
-        <div class="q-label">What can you be <em style="font-style:italic;color:var(--accent-dark)">paid for?</em></div>
-        <textarea style="min-height:100px" placeholder="Marketable abilities…"></textarea>
-      </div>
+      <button class="btn-continue" onclick="go('done-screen')">Complete the process <i class="ti ti-check" aria-hidden="true"></i></button>
     </div>
-
-    <button class="btn-continue" onclick="go('done-screen')">
-      Complete the process <i class="ti ti-check" aria-hidden="true"></i>
-    </button>
   </div>
 </div>
 
-<!-- DONE -->
+<!-- ═══════════ DONE ═══════════ -->
 <div id="done-screen" class="screen">
-  <nav class="nav">
-    <span class="nav-logo">Community</span>
-    <div class="nav-steps">
-      <div class="step-pip done"></div>
-      <div class="step-pip done"></div>
-      <div class="step-pip done"></div>
-      <div class="step-pip done"></div>
+  <nav class="nav" style="background:transparent;border-color:rgba(255,255,255,.06)">
+    <span class="nav-logo" style="color:rgba(240,236,228,.7)">Community</span>
+    <div class="nav-pips">
+      <div class="pip done"></div>
+      <div class="pip done"></div>
+      <div class="pip done"></div>
+      <div class="pip done"></div>
     </div>
   </nav>
-  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:60px 20px">
-    <div style="text-align:center;max-width:440px">
-      <div class="done-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
-      <h2 class="done-title">All <em style="font-style:italic">done.</em></h2>
-      <p class="done-sub">Your responses are saved locally and ready for Supabase integration. Thank you for completing the process.</p>
-      <button class="done-restart" onclick="go('landing')">Start again</button>
-    </div>
+  <div class="land-canvas">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="land-grid"></div>
+  </div>
+  <div class="done-inner" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px">
+    <div class="done-glyph"><i class="ti ti-check" aria-hidden="true"></i></div>
+    <h2 class="done-title">All <em>done.</em></h2>
+    <p class="done-sub">Your responses are saved locally and ready for Supabase integration. Thank you for completing the process.</p>
+    <button class="done-restart" onclick="go('landing')"><i class="ti ti-refresh" aria-hidden="true" style="font-size:12px"></i>Start again</button>
   </div>
 </div>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
 
 <script>
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById(id);
   el.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:'instant'});
+  if(id==='map-screen') setTimeout(renderMap,50);
+}
+
+function grow(el){
+  el.style.height='auto';
+  el.style.height=el.scrollHeight+'px';
 }
 
 let nodes=[];
-let selectedType={type:'person',color:'#c8a96e'};
+let selectedType={type:'person',color:'#b8965a'};
 let dragging=null,dragOff={x:0,y:0};
 
 function selectType(btn){
-  document.querySelectorAll('.map-type-btn').forEach(b=>b.classList.remove('selected'));
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedType={type:btn.dataset.type,color:btn.dataset.color};
 }
@@ -608,17 +833,16 @@ function addNode(){
   const w=canvas.offsetWidth,h=canvas.offsetHeight;
   const cx=w/2,cy=h/2;
   const angle=Math.random()*Math.PI*2;
-  const dist=90+Math.random()*90;
+  const dist=100+Math.random()*100;
   nodes.push({
     id:Date.now(),text,
     type:selectedType.type,
     color:selectedType.color,
-    x:Math.max(60,Math.min(w-60,cx+Math.cos(angle)*dist)),
+    x:Math.max(70,Math.min(w-70,cx+Math.cos(angle)*dist)),
     y:Math.max(30,Math.min(h-30,cy+Math.sin(angle)*dist))
   });
-  inp.value='';
+  inp.value='';inp.focus();
   renderMap();
-  inp.focus();
 }
 
 function removeNode(id){
@@ -632,32 +856,41 @@ function renderMap(){
   const w=canvas.offsetWidth,h=canvas.offsetHeight;
   const cx=w/2,cy=h/2;
 
-  svg.innerHTML='<defs><marker id="ah" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><circle cx="3" cy="3" r="1.5" fill="#e4e1da"/></marker></defs>';
+  svg.innerHTML='';
   svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
 
   nodes.forEach(n=>{
-    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',cx);line.setAttribute('y1',cy);
-    line.setAttribute('x2',n.x);line.setAttribute('y2',n.y);
-    line.setAttribute('stroke','#e4e1da');
-    line.setAttribute('stroke-width','1.5');
-    line.setAttribute('stroke-dasharray','4 4');
-    svg.appendChild(line);
+    const dx=n.x-cx,dy=n.y-cy;
+    const mx=cx+dx*.5,my=cy+dy*.5-Math.abs(dx)*.15;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M ${cx} ${cy} Q ${mx} ${my} ${n.x} ${n.y}`);
+    path.setAttribute('stroke',n.color);
+    path.setAttribute('stroke-width','1');
+    path.setAttribute('stroke-opacity','0.25');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-dasharray','4 5');
+    svg.appendChild(path);
+
+    const glow=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    glow.setAttribute('cx',n.x);glow.setAttribute('cy',n.y);
+    glow.setAttribute('r','18');
+    glow.setAttribute('fill',n.color);
+    glow.setAttribute('fill-opacity','0.06');
+    svg.appendChild(glow);
   });
 
-  document.querySelectorAll('.map-node-el').forEach(e=>e.remove());
+  document.querySelectorAll('.map-node-pill').forEach(e=>e.remove());
 
   nodes.forEach(n=>{
     const el=document.createElement('div');
-    el.className='map-node-el';
+    el.className='map-node-pill';
     el.dataset.id=n.id;
     el.style.left=n.x+'px';
     el.style.top=n.y+'px';
-    el.innerHTML=`<span class="dot" style="background:${n.color}"></span>${n.text}`;
+    el.innerHTML=`<span class="pill-dot" style="background:${n.color}"></span>${n.text}`;
 
     el.addEventListener('mousedown',e=>{
       dragging=n;
-      const rect=el.getBoundingClientRect();
       const cr=canvas.getBoundingClientRect();
       dragOff.x=e.clientX-cr.left-n.x;
       dragOff.y=e.clientY-cr.top-n.y;
@@ -666,29 +899,29 @@ function renderMap(){
     });
     el.addEventListener('touchstart',e=>{
       dragging=n;
-      const touch=e.touches[0];
+      const t=e.touches[0];
       const cr=canvas.getBoundingClientRect();
-      dragOff.x=touch.clientX-cr.left-n.x;
-      dragOff.y=touch.clientY-cr.top-n.y;
+      dragOff.x=t.clientX-cr.left-n.x;
+      dragOff.y=t.clientY-cr.top-n.y;
       el.classList.add('dragging');
       e.preventDefault();
     },{passive:false});
-
     canvas.appendChild(el);
   });
 
   const list=document.getElementById('nodesList');
-  list.innerHTML='';
-  nodes.forEach(n=>{
-    const item=document.createElement('div');
-    item.className='map-node-item';
-    item.innerHTML=`
-      <div class="node-type-dot" style="background:${n.color}"></div>
-      <span class="node-item-text">${n.text}</span>
-      <button class="node-remove" onclick="removeNode(${n.id})" aria-label="Remove"><i class="ti ti-x"></i></button>
-    `;
-    list.appendChild(item);
-  });
+  const empty=document.getElementById('listEmpty');
+  list.querySelectorAll('.node-list-item').forEach(e=>e.remove());
+  if(nodes.length===0){empty.style.display='block'}
+  else{
+    empty.style.display='none';
+    nodes.forEach(n=>{
+      const item=document.createElement('div');
+      item.className='node-list-item';
+      item.innerHTML=`<div class="node-list-dot" style="background:${n.color}"></div><span class="node-list-text">${n.text}</span><button class="node-remove" onclick="removeNode(${n.id})" aria-label="Remove"><i class="ti ti-x"></i></button>`;
+      list.appendChild(item);
+    });
+  }
 }
 
 document.addEventListener('mousemove',e=>{
@@ -696,7 +929,7 @@ document.addEventListener('mousemove',e=>{
   const canvas=document.getElementById('mapCanvas');
   const cr=canvas.getBoundingClientRect();
   const w=canvas.offsetWidth,h=canvas.offsetHeight;
-  dragging.x=Math.max(40,Math.min(w-40,e.clientX-cr.left-dragOff.x));
+  dragging.x=Math.max(50,Math.min(w-50,e.clientX-cr.left-dragOff.x));
   dragging.y=Math.max(20,Math.min(h-20,e.clientY-cr.top-dragOff.y));
   renderMap();
 });
@@ -706,12 +939,13 @@ document.addEventListener('touchmove',e=>{
   const cr=canvas.getBoundingClientRect();
   const w=canvas.offsetWidth,h=canvas.offsetHeight;
   const t=e.touches[0];
-  dragging.x=Math.max(40,Math.min(w-40,t.clientX-cr.left-dragOff.x));
+  dragging.x=Math.max(50,Math.min(w-50,t.clientX-cr.left-dragOff.x));
   dragging.y=Math.max(20,Math.min(h-20,t.clientY-cr.top-dragOff.y));
   renderMap();
 },{passive:false});
-document.addEventListener('mouseup',()=>{ dragging=null; });
-document.addEventListener('touchend',()=>{ dragging=null; });
+document.addEventListener('mouseup',()=>dragging=null);
+document.addEventListener('touchend',()=>dragging=null);
 </script>
 </body>
 </html>
+
