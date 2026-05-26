@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Community Contribution Intervention</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  body {
+    font-family: system-ui;
+    background: linear-gradient(to bottom, #f8fafc, #eef2f7);
+  }
+</style>
+</head>
+
+<body class="text-slate-800">
+
+<!-- ================= LANDING ================= -->
+<section id="landing" class="min-h-screen flex flex-col items-center justify-center text-center p-6">
+  <h1 class="text-4xl font-semibold">Community Contribution</h1>
+  <p class="mt-4 max-w-xl text-slate-600">
+    A guided reflection process exploring community, meaning, and career direction through contribution.
+  </p>
+
+  <button onclick="go('session1')" class="mt-8 px-6 py-3 bg-black text-white rounded-xl">
+    Begin Session 1
+  </button>
+</section>
+
+<!-- ================= SESSION 1 ================= -->
+<section id="session1" class="hidden p-6 max-w-3xl mx-auto space-y-6">
+  <h2 class="text-2xl font-semibold">Session 1 — Initial Intake</h2>
+
+  <p class="text-sm text-slate-600">
+    Clarify goals, expectations, and purpose of the intervention.
+  </p>
+
+  <div class="space-y-4">
+    <textarea class="input" placeholder="What would you like to be different?"></textarea>
+    <textarea class="input" placeholder="What obstacles are there? / What will help you overcome those?"></textarea>
+    <textarea class="input" placeholder="What stands out to you? Why?"></textarea>
+    <textarea class="input" placeholder="What are your best hopes for our time together?"></textarea>
+    <textarea class="input" placeholder="What goals would you like to achieve?"></textarea>
+    <textarea class="input" placeholder="What will you do yourself as part of the process?"></textarea>
+    <textarea class="input" placeholder="What do you predict will happen over the next few weeks?"></textarea>
+  </div>
+
+  <button onclick="go('session2')" class="btn">Continue</button>
+</section>
+
+<!-- ================= SESSION 2 ================= -->
+<section id="session2" class="hidden p-6 max-w-3xl mx-auto space-y-6">
+  <h2 class="text-2xl font-semibold">Session 2 — Community Exploration</h2>
+
+  <p class="text-sm text-slate-600">
+    Community is belonging, opportunity, and hidden connection.
+  </p>
+
+  <div class="space-y-4">
+    <textarea class="input" placeholder="What are a few words that come to mind when you hear 'community'?"></textarea>
+    <textarea class="input" placeholder="What does community mean to you?"></textarea>
+    <textarea class="input" placeholder="What makes an ideal community?"></textarea>
+    <textarea class="input" placeholder="What groups have impacted your life most?"></textarea>
+    <textarea class="input" placeholder="Where do you feel most like yourself?"></textarea>
+    <textarea class="input" placeholder="Who do you see most often? Has this changed?"></textarea>
+    <textarea class="input" placeholder="If everything changed tomorrow, who would still be around?"></textarea>
+  </div>
+
+  <button onclick="go('map')" class="btn">Community Map</button>
+</section>
+
+<!-- ================= COMMUNITY MAP ================= -->
+<section id="map" class="hidden p-6 max-w-4xl mx-auto space-y-4">
+  <h2 class="text-2xl font-semibold">Community Map</h2>
+
+  <p class="text-sm text-slate-600">
+    Add people, groups, and places in your life.
+  </p>
+
+  <div class="flex gap-2">
+    <input id="nodeInput" class="flex-1 p-3 border rounded-xl" placeholder="Add connection"/>
+    <button onclick="addNode()" class="px-4 bg-black text-white rounded-xl">Add</button>
+  </div>
+
+  <div id="canvas" class="relative w-full h-[420px] bg-white border rounded-xl overflow-hidden"></div>
+
+  <button onclick="go('session3')" class="btn">Continue</button>
+</section>
+
+<!-- ================= SESSION 3 ================= -->
+<section id="session3" class="hidden p-6 max-w-3xl mx-auto space-y-6">
+  <h2 class="text-2xl font-semibold">Session 3 — Altruistic Capital</h2>
+
+  <p class="text-sm text-slate-600">
+    Three Good Things — treat as an experiment, not a test.
+  </p>
+
+  <textarea class="input" placeholder="Three good things today"></textarea>
+  <textarea class="input" placeholder="Was anything done with or for someone else?"></textarea>
+  <textarea class="input" placeholder="What stood out and why?"></textarea>
+  <textarea class="input" placeholder="What did you contribute to this moment?"></textarea>
+  <textarea class="input" placeholder="What might the other person have felt?"></textarea>
+
+  <h3 class="text-xl font-semibold mt-6">Ikigai Reflection</h3>
+
+  <textarea class="input" placeholder="What do you love?"></textarea>
+  <textarea class="input" placeholder="What are you good at?"></textarea>
+  <textarea class="input" placeholder="What does the world need?"></textarea>
+  <textarea class="input" placeholder="What can you be paid for?"></textarea>
+
+  <button onclick="go('done')" class="btn">Finish</button>
+</section>
+
+<!-- ================= DONE ================= -->
+<section id="done" class="hidden min-h-screen flex flex-col items-center justify-center text-center p-6">
+  <h1 class="text-3xl font-semibold">Complete</h1>
+  <p class="mt-4 text-slate-600 max-w-md">
+    Your responses are saved locally. Ready for Supabase integration.
+  </p>
+</section>
+
+<!-- ================= STYLES ================= -->
+<style>
+.input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: black;
+  color: white;
+  border-radius: 12px;
+}
+</style>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+function go(id){
+  document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+/* simple community map */
+let nodes = [];
+
+function addNode(){
+  const input = document.getElementById("nodeInput");
+  if(!input.value) return;
+
+  nodes.push({
+    text: input.value,
+    x: Math.random()*320,
+    y: Math.random()*320
+  });
+
+  render();
+  input.value = "";
+}
+
+function render(){
+  const c = document.getElementById("canvas");
+  c.innerHTML = "";
+
+  nodes.forEach(n => {
+    const el = document.createElement("div");
+    el.innerText = n.text;
+    el.className = "absolute px-3 py-1 bg-slate-100 border rounded-full text-sm";
+    el.style.left = n.x + "px";
+    el.style.top = n.y + "px";
+    c.appendChild(el);
+  });
+}
+
+/* ================= SUPABASE READY ================= */
+const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+
+console.log("Supabase ready for integration");
+</script>
+
+</body>
+</html>
